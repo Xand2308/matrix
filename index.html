@@ -30,6 +30,14 @@
     window.addEventListener("resize", () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
+
+    const newColumns = Math.floor(canvas.width / fontSize);
+
+    drops.length = 0; // limpa array
+
+    for (let i = 0; i < newColumns; i++) {
+        drops[i] = 1;
+    }       
 });
 
 
@@ -42,6 +50,15 @@
     const nome = "ALEXANDRE MARQUES";
 let letrasMostradas = 0;
 
+    const programadorMessage = "PROGRAMADOR!!!";
+    let programadorVisible = false;
+    let programadorScale = 0.5;
+    let programadorOpacity = 0;
+    const programadorAnimationSpeed = 0.05;
+    const programadorMaxScale = 1.2;
+    const programadorFinalScale = 1;
+    const programadorYOffset = 100;
+
 
     for (let i = 0; i < columns; i++) {
         drops[i] = 1;
@@ -49,11 +66,47 @@ let letrasMostradas = 0;
 
     function desenharNome() {
         ctx.fillStyle = "#00FF99"; // cor diferente para destacar
-        ctx.font = "60px monospace"; // fonte maior
+        // fonte maior
+
+        const nomeSize = canvas.width * 0.05;
+ctx.font = nomeSize + "px monospace";
+
         ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+     
 
         const textoAtual = nome.substring(0, letrasMostradas);
         ctx.fillText(textoAtual, canvas.width / 2, canvas.height / 2);
+    }
+
+    function desenharProgramador() {
+        if (programadorScale < programadorMaxScale) {
+            programadorScale += programadorAnimationSpeed;
+        } else if (programadorScale > programadorFinalScale) {
+            programadorScale -= programadorAnimationSpeed * 0.5; // slow down retraction
+        } else {
+            programadorScale = programadorFinalScale; // ensure it settles
+        }
+
+        if (programadorOpacity < 1) {
+            programadorOpacity += programadorAnimationSpeed * 2;
+        } else {
+            programadorOpacity = 1;
+        }
+        
+        ctx.save();
+        ctx.globalAlpha = programadorOpacity;
+        ctx.fillStyle = "#0F0"; // Gold color for PROGRAMADOR!!!
+        const programadorFontSize = (canvas.width * 0.03) * programadorScale;
+        ctx.font = programadorFontSize + "px monospace";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        const textX = canvas.width / 2;
+        const textY = canvas.height / 2 + programadorYOffset;
+
+        ctx.fillText(programadorMessage, textX, textY);
+        ctx.restore();
     }
 
     function draw() {
@@ -80,9 +133,24 @@ let letrasMostradas = 0;
 
         // Desenha o nome uma vez por frame, após o efeito matrix
         desenharNome();
+
+        // Lógica para a mensagem "PROGRAMADOR!!!"
+        if (letrasMostradas === nome.length && !programadorVisible) {
+            programadorVisible = true;
+        }
+
+        if (programadorVisible) {
+            desenharProgramador();
+        }
     }
 
-    setInterval(draw, 33);
+    function loop() {
+    draw();
+    requestAnimationFrame(loop);
+}
+
+loop();
+
 </script>
 
 </body>
