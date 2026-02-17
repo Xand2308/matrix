@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas Informações</title>
+    <style>
+        body {
+            background-color: #000;
+            color: #0F0;
+            font-family: 'monospace', sans-serif;
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 0;
+            padding: 40px;
+        }
+        h1, h2 {
+            color: #0F0;
+            text-shadow: 0 0 5px #0F0;
+        }
+        /* Estilo do botão de voltar, igual ao do certificado */
+        #back-button-info {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: transparent;
+            color: #0F0;
+            border: 2px solid #0F0;
+            text-decoration: none;
+            font-family: 'monospace', sans-serif;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+            z-index: 1000;
+        }
+        #back-button-info:hover {
+            background-color: #0F0;
+            color: #000;
+        }
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        .section {
+            margin-bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+
+        <div class="section">
+            <h1>Minhas Informações</h1>
+            <!-- Adicione sua descrição ou um breve parágrafo sobre você aqui -->
+            <p>Olá! Eu sou  [Alexandre Marques Pedro] , um entusiasta de tecnologia e desenvolvimento.</p>
+        </div>
+
+        <div class="section">
+            <h2>Habilidades</h2>
+            <!-- Adicione suas habilidades aqui. Você pode usar uma lista. -->
+            <ul>
+                <li>JavaScript</li>
+                <li>HTML & CSS</li>
+                <li>React</li>
+                <li>Node.js</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Contato</h2>
+            <!-- Adicione suas informações de contato (ex: links para LinkedIn, GitHub, etc.) -->
+            <p>Você pode me encontrar em:</p>
+            <ul>
+                <li><a href="#" target="_blank">LinkedIn</a></li>
+                <li><a href="#" target="_blank">GitHub</a></li>
+            </ul>
+        </div>
+
+        <a id="back-button-info" href="index.html">← Voltar</a>
+
+    </div>
+
+</body>
+</html>

@@ -18,9 +18,30 @@
             max-height: 90%;
             border: 2px solid #0F0;
         }
+        /* Estilo do botão de voltar */
+        #back-button {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            background-color: transparent;
+            color: #0F0;
+            border: 2px solid #0F0;
+            text-decoration: none;
+            font-family: 'monospace', sans-serif;
+            font-size: 16px;
+            transition: background-color 0.3s, color 0.3s;
+            z-index: 1000;
+        }
+        #back-button:hover {
+            background-color: #0F0;
+            color: #000;
+        }
     </style>
 </head>
 <body>
     <img src="Certificado - DevQuest 2.0 Front-end.png" alt="Certificado DevQuest">
+
+    <a id="back-button" href="index.html">← Voltar</a>
 </body>
 </html>

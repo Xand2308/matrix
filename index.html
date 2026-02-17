@@ -14,11 +14,41 @@
         canvas {
             display: block;
         }
+        /* Estilos para o link de informações (ícone de menu) */
+        #info-link {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 40px;
+            height: 35px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            cursor: pointer;
+            z-index: 1000; /* Garante que o link fique acima do canvas */
+        }
+        #info-link span {
+            width: 100%;
+            height: 4px;
+            background-color: #0F0; /* Cor verde Matrix */
+            border-radius: 2px;
+            transition: background-color 0.3s;
+        }
+        #info-link:hover span {
+            background-color: #FFF; /* Muda a cor no hover */
+        }
     </style>
 </head>
 <body>
 
 <canvas id="matrix"></canvas>
+
+<!-- Link de informações (ícone de menu) -->
+<a id="info-link" href="info.html">
+    <span></span>
+    <span></span>
+    <span></span>
+</a>
 
 <script>
     const canvas = document.getElementById("matrix");
@@ -44,6 +74,8 @@
     const letters = "0123456789";
     const fontSize = 16;
     const columns = canvas.width / fontSize;
+
+    const fallSpeed = 1; // Valor padrão para a velocidade de queda. Ajuste este valor para mais lento (ex: 0.5) ou mais rápido (ex: 2)
 
     const drops = [];
 
@@ -96,15 +128,41 @@ ctx.font = nomeSize + "px monospace";
         
         ctx.save();
         ctx.globalAlpha = programadorOpacity;
-        ctx.fillStyle = "#0F0"; // Gold color for PROGRAMADOR!!!
+        
         const programadorFontSize = (canvas.width * 0.03) * programadorScale;
         ctx.font = programadorFontSize + "px monospace";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 
+        const textWidth = ctx.measureText(programadorMessage).width;
         const textX = canvas.width / 2;
         const textY = canvas.height / 2 + programadorYOffset;
 
+        // Estilos do botão
+        const buttonPaddingX = 20;
+        const buttonPaddingY = 10;
+        const buttonWidth = textWidth + buttonPaddingX * 2;
+        const buttonHeight = programadorFontSize + buttonPaddingY * 2;
+        const buttonX = textX - buttonWidth / 2;
+        const buttonY = textY - buttonHeight / 2;
+
+        // Efeito de brilho (glow) para o botão
+        ctx.shadowColor = "rgba(0, 255, 0, 0.7)";
+        ctx.shadowBlur = 15;
+        
+        // Desenha uma borda sutil que irá gerar o brilho com cantos arredondados
+        const borderRadius = 10; // Raio dos cantos
+        ctx.beginPath();
+        ctx.roundRect(buttonX, buttonY, buttonWidth, buttonHeight, borderRadius);
+        ctx.strokeStyle = "rgba(0, 255, 0, 0.2)"; 
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        // Resetar a sombra para não afetar outros elementos
+        ctx.shadowBlur = 0;
+
+        // Desenha o texto do botão
+        ctx.fillStyle = "#0F0";
         ctx.fillText(programadorMessage, textX, textY);
         ctx.restore();
     }
@@ -128,7 +186,7 @@ ctx.font = nomeSize + "px monospace";
                 }
             }
 
-            drops[i]++;
+            drops[i] += fallSpeed;
         }
 
         // Desenha o nome uma vez por frame, após o efeito matrix
@@ -152,18 +210,20 @@ ctx.font = nomeSize + "px monospace";
 canvas.addEventListener("click", (event) => {
     if (programadorVisible) {
         const programadorFontSize = (canvas.width * 0.03) * programadorScale;
-        ctx.font = programadorFontSize + "px monospace";
+        ctx.font = programadorFontSize + "px monospace"; // Set font to measure text correctly
         const textWidth = ctx.measureText(programadorMessage).width;
         const textX = canvas.width / 2;
         const textY = canvas.height / 2 + programadorYOffset;
         
-        const textLeft = textX - textWidth / 2;
-        const textRight = textX + textWidth / 2;
-        const textTop = textY - programadorFontSize / 2;
-        const textBottom = textY + programadorFontSize / 2;
+        const buttonPaddingX = 20;
+        const buttonPaddingY = 10;
+        const buttonWidth = textWidth + buttonPaddingX * 2;
+        const buttonHeight = programadorFontSize + buttonPaddingY * 2;
+        const buttonX = textX - buttonWidth / 2;
+        const buttonY = textY - buttonHeight / 2;
 
-        if (event.clientX >= textLeft && event.clientX <= textRight &&
-            event.clientY >= textTop && event.clientY <= textBottom) {
+        if (event.clientX >= buttonX && event.clientX <= (buttonX + buttonWidth) &&
+            event.clientY >= buttonY && event.clientY <= (buttonY + buttonHeight)) {
             window.location.href = "certificate.html";
         }
     }
@@ -172,18 +232,20 @@ canvas.addEventListener("click", (event) => {
 canvas.addEventListener("mousemove", (event) => {
     if (programadorVisible) {
         const programadorFontSize = (canvas.width * 0.03) * programadorScale;
-        ctx.font = programadorFontSize + "px monospace";
+        ctx.font = programadorFontSize + "px monospace"; // Set font to measure text correctly
         const textWidth = ctx.measureText(programadorMessage).width;
         const textX = canvas.width / 2;
         const textY = canvas.height / 2 + programadorYOffset;
         
-        const textLeft = textX - textWidth / 2;
-        const textRight = textX + textWidth / 2;
-        const textTop = textY - programadorFontSize / 2;
-        const textBottom = textY + programadorFontSize / 2;
+        const buttonPaddingX = 20;
+        const buttonPaddingY = 10;
+        const buttonWidth = textWidth + buttonPaddingX * 2;
+        const buttonHeight = programadorFontSize + buttonPaddingY * 2;
+        const buttonX = textX - buttonWidth / 2;
+        const buttonY = textY - buttonHeight / 2;
 
-        if (event.clientX >= textLeft && event.clientX <= textRight &&
-            event.clientY >= textTop && event.clientY <= textBottom) {
+        if (event.clientX >= buttonX && event.clientX <= (buttonX + buttonWidth) &&
+            event.clientY >= buttonY && event.clientY <= (buttonY + buttonHeight)) {
             canvas.style.cursor = "pointer";
         } else {
             canvas.style.cursor = "default";
