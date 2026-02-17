@@ -149,6 +149,48 @@ ctx.font = nomeSize + "px monospace";
     requestAnimationFrame(loop);
 }
 
+canvas.addEventListener("click", (event) => {
+    if (programadorVisible) {
+        const programadorFontSize = (canvas.width * 0.03) * programadorScale;
+        ctx.font = programadorFontSize + "px monospace";
+        const textWidth = ctx.measureText(programadorMessage).width;
+        const textX = canvas.width / 2;
+        const textY = canvas.height / 2 + programadorYOffset;
+        
+        const textLeft = textX - textWidth / 2;
+        const textRight = textX + textWidth / 2;
+        const textTop = textY - programadorFontSize / 2;
+        const textBottom = textY + programadorFontSize / 2;
+
+        if (event.clientX >= textLeft && event.clientX <= textRight &&
+            event.clientY >= textTop && event.clientY <= textBottom) {
+            window.location.href = "certificate.html";
+        }
+    }
+});
+
+canvas.addEventListener("mousemove", (event) => {
+    if (programadorVisible) {
+        const programadorFontSize = (canvas.width * 0.03) * programadorScale;
+        ctx.font = programadorFontSize + "px monospace";
+        const textWidth = ctx.measureText(programadorMessage).width;
+        const textX = canvas.width / 2;
+        const textY = canvas.height / 2 + programadorYOffset;
+        
+        const textLeft = textX - textWidth / 2;
+        const textRight = textX + textWidth / 2;
+        const textTop = textY - programadorFontSize / 2;
+        const textBottom = textY + programadorFontSize / 2;
+
+        if (event.clientX >= textLeft && event.clientX <= textRight &&
+            event.clientY >= textTop && event.clientY <= textBottom) {
+            canvas.style.cursor = "pointer";
+        } else {
+            canvas.style.cursor = "default";
+        }
+    }
+});
+
 loop();
 
 </script>
