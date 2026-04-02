@@ -91,9 +91,64 @@ let letrasMostradas = 0;
     const programadorFinalScale = 1;
     const programadorYOffset = 100;
 
+    const certificadosMessage = "CERTIFICADOS";
+    let certificadosVisible = false;
+    let certificadosScale = 0.5;
+    let certificadosOpacity = 0;
+    const certificadosYOffset = -100;
 
     for (let i = 0; i < columns; i++) {
         drops[i] = 1;
+    }
+
+    function desenharCertificados() {
+        if (certificadosScale < programadorMaxScale) {
+            certificadosScale += programadorAnimationSpeed;
+        } else if (certificadosScale > programadorFinalScale) {
+            certificadosScale -= programadorAnimationSpeed * 0.5;
+        } else {
+            certificadosScale = programadorFinalScale;
+        }
+
+        if (certificadosOpacity < 1) {
+            certificadosOpacity += programadorAnimationSpeed * 2;
+        } else {
+            certificadosOpacity = 1;
+        }
+        
+        ctx.save();
+        ctx.globalAlpha = certificadosOpacity;
+        
+        const certificadosFontSize = (canvas.width * 0.03) * certificadosScale;
+        ctx.font = certificadosFontSize + "px monospace";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+
+        const textWidth = ctx.measureText(certificadosMessage).width;
+        const textX = canvas.width / 2;
+        const textY = canvas.height / 2 + certificadosYOffset;
+
+        const buttonPaddingX = 20;
+        const buttonPaddingY = 10;
+        const buttonWidth = textWidth + buttonPaddingX * 2;
+        const buttonHeight = certificadosFontSize + buttonPaddingY * 2;
+        const buttonX = textX - buttonWidth / 2;
+        const buttonY = textY - buttonHeight / 2;
+
+        ctx.shadowColor = "rgba(0, 255, 0, 0.7)";
+        ctx.shadowBlur = 15;
+        
+        const borderRadius = 10;
+        ctx.beginPath();
+        ctx.roundRect(buttonX, buttonY, buttonWidth, buttonHeight, borderRadius);
+        ctx.strokeStyle = "rgba(0, 255, 0, 0.2)"; 
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        ctx.shadowBlur = 0;
+        ctx.fillStyle = "#0F0";
+        ctx.fillText(certificadosMessage, textX, textY);
+        ctx.restore();
     }
 
     function desenharNome() {
@@ -193,12 +248,17 @@ ctx.font = nomeSize + "px monospace";
         desenharNome();
 
         // Lógica para a mensagem "PROGRAMADOR!!!"
-        if (letrasMostradas === nome.length && !programadorVisible) {
-            programadorVisible = true;
+        if (letrasMostradas === nome.length) {
+            if (!programadorVisible) programadorVisible = true;
+            if (!certificadosVisible) certificadosVisible = true;
         }
 
         if (programadorVisible) {
             desenharProgramador();
+        }
+
+        if (certificadosVisible) {
+            desenharCertificados();
         }
     }
 
@@ -208,9 +268,10 @@ ctx.font = nomeSize + "px monospace";
 }
 
 canvas.addEventListener("click", (event) => {
+    // Clique no botão Programador
     if (programadorVisible) {
         const programadorFontSize = (canvas.width * 0.03) * programadorScale;
-        ctx.font = programadorFontSize + "px monospace"; // Set font to measure text correctly
+        ctx.font = programadorFontSize + "px monospace";
         const textWidth = ctx.measureText(programadorMessage).width;
         const textX = canvas.width / 2;
         const textY = canvas.height / 2 + programadorYOffset;
@@ -219,6 +280,27 @@ canvas.addEventListener("click", (event) => {
         const buttonPaddingY = 10;
         const buttonWidth = textWidth + buttonPaddingX * 2;
         const buttonHeight = programadorFontSize + buttonPaddingY * 2;
+        const buttonX = textX - buttonWidth / 2;
+        const buttonY = textY - buttonHeight / 2;
+
+        if (event.clientX >= buttonX && event.clientX <= (buttonX + buttonWidth) &&
+            event.clientY >= buttonY && event.clientY <= (buttonY + buttonHeight)) {
+            window.location.href = "programador.html";
+        }
+    }
+
+    // Clique no botão Certificados
+    if (certificadosVisible) {
+        const certificadosFontSize = (canvas.width * 0.03) * certificadosScale;
+        ctx.font = certificadosFontSize + "px monospace";
+        const textWidth = ctx.measureText(certificadosMessage).width;
+        const textX = canvas.width / 2;
+        const textY = canvas.height / 2 + certificadosYOffset;
+        
+        const buttonPaddingX = 20;
+        const buttonPaddingY = 10;
+        const buttonWidth = textWidth + buttonPaddingX * 2;
+        const buttonHeight = certificadosFontSize + buttonPaddingY * 2;
         const buttonX = textX - buttonWidth / 2;
         const buttonY = textY - buttonHeight / 2;
 
@@ -230,9 +312,11 @@ canvas.addEventListener("click", (event) => {
 });
 
 canvas.addEventListener("mousemove", (event) => {
+    let overButton = false;
+
     if (programadorVisible) {
         const programadorFontSize = (canvas.width * 0.03) * programadorScale;
-        ctx.font = programadorFontSize + "px monospace"; // Set font to measure text correctly
+        ctx.font = programadorFontSize + "px monospace";
         const textWidth = ctx.measureText(programadorMessage).width;
         const textX = canvas.width / 2;
         const textY = canvas.height / 2 + programadorYOffset;
@@ -246,11 +330,31 @@ canvas.addEventListener("mousemove", (event) => {
 
         if (event.clientX >= buttonX && event.clientX <= (buttonX + buttonWidth) &&
             event.clientY >= buttonY && event.clientY <= (buttonY + buttonHeight)) {
-            canvas.style.cursor = "pointer";
-        } else {
-            canvas.style.cursor = "default";
+            overButton = true;
         }
     }
+
+    if (certificadosVisible && !overButton) {
+        const certificadosFontSize = (canvas.width * 0.03) * certificadosScale;
+        ctx.font = certificadosFontSize + "px monospace";
+        const textWidth = ctx.measureText(certificadosMessage).width;
+        const textX = canvas.width / 2;
+        const textY = canvas.height / 2 + certificadosYOffset;
+        
+        const buttonPaddingX = 20;
+        const buttonPaddingY = 10;
+        const buttonWidth = textWidth + buttonPaddingX * 2;
+        const buttonHeight = certificadosFontSize + buttonPaddingY * 2;
+        const buttonX = textX - buttonWidth / 2;
+        const buttonY = textY - buttonHeight / 2;
+
+        if (event.clientX >= buttonX && event.clientX <= (buttonX + buttonWidth) &&
+            event.clientY >= buttonY && event.clientY <= (buttonY + buttonHeight)) {
+            overButton = true;
+        }
+    }
+
+    canvas.style.cursor = overButton ? "pointer" : "default";
 });
 
 loop();
