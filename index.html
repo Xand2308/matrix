@@ -1,125 +1,138 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Matrix Effect</title>
     <style>
-        body {
-            margin: 0;
-            background: black;
-            overflow: hidden;
-        }
-        canvas {
-            display: block;
-        }
-        /* Estilos para o link de informações (ícone de menu) */
-        #info-link {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 40px;
-            height: 35px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            cursor: pointer;
-            z-index: 1000; /* Garante que o link fique acima do canvas */
-        }
-        #info-link span {
-            width: 100%;
-            height: 4px;
-            background-color: #0F0; /* Cor verde Matrix */
-            border-radius: 2px;
-            transition: background-color 0.3s;
-        }
-        #info-link:hover span {
-            background-color: #FFF; /* Muda a cor no hover */
-        }
+      body {
+        margin: 0;
+        background: black;
+        overflow: hidden;
+      }
+      canvas {
+        display: block;
+      }
+      /* Estilos para o link de informações (ícone de menu) */
+      #info-link {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 40px;
+        height: 35px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        cursor: pointer;
+        z-index: 1000; /* Garante que o link fique acima do canvas */
+      }
+      #info-link span {
+        width: 100%;
+        height: 4px;
+        background-color: #0f0; /* Cor verde Matrix */
+        border-radius: 2px;
+        transition: background-color 0.3s;
+      }
+      #info-link:hover span {
+        background-color: #fff; /* Muda a cor no hover */
+      }
+      #hint {
+        position: fixed;
+        left: 20px;
+        bottom: 80px;
+        color: #0f0;
+        background: rgba(0, 0, 0, 0.65);
+        border: 1px solid #0f0;
+        padding: 10px 14px;
+        border-radius: 10px;
+        font-family: monospace;
+        font-size: 14px;
+        text-align: center;
+        z-index: 1000;
+        box-shadow: 0 0 20px rgba(0, 255, 0, 0.15);
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
+    <canvas id="matrix"></canvas>
+    <div id="hint">Clique em PROGRAMADOR ou CERTIFICADOS para navegar</div>
 
-<canvas id="matrix"></canvas>
+    <!-- Link de informações (ícone de menu) -->
+    <a id="info-link" href="pages/info.html">
+      <span></span>
+      <span></span>
+      <span></span>
+    </a>
 
-<!-- Link de informações (ícone de menu) -->
-<a id="info-link" href="pages/info.html">
-    <span></span>
-    <span></span>
-    <span></span>
-</a>
+    <script>
+      const canvas = document.getElementById("matrix");
+      const ctx = canvas.getContext("2d");
 
-<script>
-    const canvas = document.getElementById("matrix");
-    const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
 
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+      window.addEventListener("resize", () => {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
 
-    window.addEventListener("resize", () => {
-    canvas.width = window.innerWidth;
-    canvas.height = window.innerHeight;
+        const newColumns = Math.floor(canvas.width / fontSize);
 
-    const newColumns = Math.floor(canvas.width / fontSize);
+        drops.length = 0; // limpa array
 
-    drops.length = 0; // limpa array
+        for (let i = 0; i < newColumns; i++) {
+          drops[i] = 1;
+        }
+      });
 
-    for (let i = 0; i < newColumns; i++) {
+      const letters = "0123456789";
+      const fontSize = 16;
+      const columns = canvas.width / fontSize;
+
+      const fallSpeed = 1; // Valor padrão para a velocidade de queda. Ajuste este valor para mais lento (ex: 0.5) ou mais rápido (ex: 2)
+
+      const drops = [];
+
+      const nome = "ALEXANDRE MARQUES";
+      let letrasMostradas = 0;
+
+      const programadorMessage = "PROGRAMADOR!!!";
+      let programadorVisible = false;
+      let programadorScale = 0.5;
+      let programadorOpacity = 0;
+      const programadorAnimationSpeed = 0.05;
+      const programadorMaxScale = 1.2;
+      const programadorFinalScale = 1;
+      const programadorYOffset = 100;
+
+      const certificadosMessage = "CERTIFICADOS";
+      let certificadosVisible = false;
+      let certificadosScale = 0.5;
+      let certificadosOpacity = 0;
+      const certificadosYOffset = -100;
+
+      for (let i = 0; i < columns; i++) {
         drops[i] = 1;
-    }       
-});
+      }
 
-
-    const letters = "0123456789";
-    const fontSize = 16;
-    const columns = canvas.width / fontSize;
-
-    const fallSpeed = 1; // Valor padrão para a velocidade de queda. Ajuste este valor para mais lento (ex: 0.5) ou mais rápido (ex: 2)
-
-    const drops = [];
-
-    const nome = "ALEXANDRE MARQUES";
-let letrasMostradas = 0;
-
-    const programadorMessage = "PROGRAMADOR!!!";
-    let programadorVisible = false;
-    let programadorScale = 0.5;
-    let programadorOpacity = 0;
-    const programadorAnimationSpeed = 0.05;
-    const programadorMaxScale = 1.2;
-    const programadorFinalScale = 1;
-    const programadorYOffset = 100;
-
-    const certificadosMessage = "CERTIFICADOS";
-    let certificadosVisible = false;
-    let certificadosScale = 0.5;
-    let certificadosOpacity = 0;
-    const certificadosYOffset = -100;
-
-    for (let i = 0; i < columns; i++) {
-        drops[i] = 1;
-    }
-
-    function desenharCertificados() {
+      function desenharCertificados() {
         if (certificadosScale < programadorMaxScale) {
-            certificadosScale += programadorAnimationSpeed;
+          certificadosScale += programadorAnimationSpeed;
         } else if (certificadosScale > programadorFinalScale) {
-            certificadosScale -= programadorAnimationSpeed * 0.5;
+          certificadosScale -= programadorAnimationSpeed * 0.5;
         } else {
-            certificadosScale = programadorFinalScale;
+          certificadosScale = programadorFinalScale;
         }
 
         if (certificadosOpacity < 1) {
-            certificadosOpacity += programadorAnimationSpeed * 2;
+          certificadosOpacity += programadorAnimationSpeed * 2;
         } else {
-            certificadosOpacity = 1;
+          certificadosOpacity = 1;
         }
-        
+
         ctx.save();
         ctx.globalAlpha = certificadosOpacity;
-        
-        const certificadosFontSize = (canvas.width * 0.03) * certificadosScale;
+
+        const certificadosFontSize = canvas.width * 0.03 * certificadosScale;
         ctx.font = certificadosFontSize + "px monospace";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -137,11 +150,17 @@ let letrasMostradas = 0;
 
         ctx.shadowColor = "rgba(0, 255, 0, 0.7)";
         ctx.shadowBlur = 15;
-        
+
         const borderRadius = 10;
         ctx.beginPath();
-        ctx.roundRect(buttonX, buttonY, buttonWidth, buttonHeight, borderRadius);
-        ctx.strokeStyle = "rgba(0, 255, 0, 0.2)"; 
+        ctx.roundRect(
+          buttonX,
+          buttonY,
+          buttonWidth,
+          buttonHeight,
+          borderRadius,
+        );
+        ctx.strokeStyle = "rgba(0, 255, 0, 0.2)";
         ctx.lineWidth = 2;
         ctx.stroke();
 
@@ -149,42 +168,41 @@ let letrasMostradas = 0;
         ctx.fillStyle = "#0F0";
         ctx.fillText(certificadosMessage, textX, textY);
         ctx.restore();
-    }
+      }
 
-    function desenharNome() {
+      function desenharNome() {
         ctx.fillStyle = "#00FF99"; // cor diferente para destacar
         // fonte maior
 
         const nomeSize = canvas.width * 0.05;
-ctx.font = nomeSize + "px monospace";
+        ctx.font = nomeSize + "px monospace";
 
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-     
 
         const textoAtual = nome.substring(0, letrasMostradas);
         ctx.fillText(textoAtual, canvas.width / 2, canvas.height / 2);
-    }
+      }
 
-    function desenharProgramador() {
+      function desenharProgramador() {
         if (programadorScale < programadorMaxScale) {
-            programadorScale += programadorAnimationSpeed;
+          programadorScale += programadorAnimationSpeed;
         } else if (programadorScale > programadorFinalScale) {
-            programadorScale -= programadorAnimationSpeed * 0.5; // slow down retraction
+          programadorScale -= programadorAnimationSpeed * 0.5; // slow down retraction
         } else {
-            programadorScale = programadorFinalScale; // ensure it settles
+          programadorScale = programadorFinalScale; // ensure it settles
         }
 
         if (programadorOpacity < 1) {
-            programadorOpacity += programadorAnimationSpeed * 2;
+          programadorOpacity += programadorAnimationSpeed * 2;
         } else {
-            programadorOpacity = 1;
+          programadorOpacity = 1;
         }
-        
+
         ctx.save();
         ctx.globalAlpha = programadorOpacity;
-        
-        const programadorFontSize = (canvas.width * 0.03) * programadorScale;
+
+        const programadorFontSize = canvas.width * 0.03 * programadorScale;
         ctx.font = programadorFontSize + "px monospace";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
@@ -204,12 +222,18 @@ ctx.font = nomeSize + "px monospace";
         // Efeito de brilho (glow) para o botão
         ctx.shadowColor = "rgba(0, 255, 0, 0.7)";
         ctx.shadowBlur = 15;
-        
+
         // Desenha uma borda sutil que irá gerar o brilho com cantos arredondados
         const borderRadius = 10; // Raio dos cantos
         ctx.beginPath();
-        ctx.roundRect(buttonX, buttonY, buttonWidth, buttonHeight, borderRadius);
-        ctx.strokeStyle = "rgba(0, 255, 0, 0.2)"; 
+        ctx.roundRect(
+          buttonX,
+          buttonY,
+          buttonWidth,
+          buttonHeight,
+          borderRadius,
+        );
+        ctx.strokeStyle = "rgba(0, 255, 0, 0.2)";
         ctx.lineWidth = 2;
         ctx.stroke();
 
@@ -220,9 +244,9 @@ ctx.font = nomeSize + "px monospace";
         ctx.fillStyle = "#0F0";
         ctx.fillText(programadorMessage, textX, textY);
         ctx.restore();
-    }
+      }
 
-    function draw() {
+      function draw() {
         ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
         ctx.fillRect(0, 0, canvas.width, canvas.height);
 
@@ -230,18 +254,18 @@ ctx.font = nomeSize + "px monospace";
         ctx.font = fontSize + "px monospace";
 
         for (let i = 0; i < drops.length; i++) {
-            const text = letters[Math.floor(Math.random() * letters.length)];
-            ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+          const text = letters[Math.floor(Math.random() * letters.length)];
+          ctx.fillText(text, i * fontSize, drops[i] * fontSize);
 
-            if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                drops[i] = 0;
+          if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
 
-                if (letrasMostradas < nome.length) {
-                    letrasMostradas++;
-                }
+            if (letrasMostradas < nome.length) {
+              letrasMostradas++;
             }
+          }
 
-            drops[i] += fallSpeed;
+          drops[i] += fallSpeed;
         }
 
         // Desenha o nome uma vez por frame, após o efeito matrix
@@ -249,117 +273,131 @@ ctx.font = nomeSize + "px monospace";
 
         // Lógica para a mensagem "PROGRAMADOR!!!"
         if (letrasMostradas === nome.length) {
-            if (!programadorVisible) programadorVisible = true;
-            if (!certificadosVisible) certificadosVisible = true;
+          if (!programadorVisible) programadorVisible = true;
+          if (!certificadosVisible) certificadosVisible = true;
         }
 
         if (programadorVisible) {
-            desenharProgramador();
+          desenharProgramador();
         }
 
         if (certificadosVisible) {
-            desenharCertificados();
+          desenharCertificados();
         }
-    }
+      }
 
-    function loop() {
-    draw();
-    requestAnimationFrame(loop);
-}
+      function loop() {
+        draw();
+        requestAnimationFrame(loop);
+      }
 
-canvas.addEventListener("click", (event) => {
-    // Clique no botão Programador
-    if (programadorVisible) {
-        const programadorFontSize = (canvas.width * 0.03) * programadorScale;
-        ctx.font = programadorFontSize + "px monospace";
-        const textWidth = ctx.measureText(programadorMessage).width;
-        const textX = canvas.width / 2;
-        const textY = canvas.height / 2 + programadorYOffset;
-        
-        const buttonPaddingX = 20;
-        const buttonPaddingY = 10;
-        const buttonWidth = textWidth + buttonPaddingX * 2;
-        const buttonHeight = programadorFontSize + buttonPaddingY * 2;
-        const buttonX = textX - buttonWidth / 2;
-        const buttonY = textY - buttonHeight / 2;
+      canvas.addEventListener("click", (event) => {
+        // Clique no botão Programador
+        if (programadorVisible) {
+          const programadorFontSize = canvas.width * 0.03 * programadorScale;
+          ctx.font = programadorFontSize + "px monospace";
+          const textWidth = ctx.measureText(programadorMessage).width;
+          const textX = canvas.width / 2;
+          const textY = canvas.height / 2 + programadorYOffset;
 
-        if (event.clientX >= buttonX && event.clientX <= (buttonX + buttonWidth) &&
-            event.clientY >= buttonY && event.clientY <= (buttonY + buttonHeight)) {
+          const buttonPaddingX = 20;
+          const buttonPaddingY = 10;
+          const buttonWidth = textWidth + buttonPaddingX * 2;
+          const buttonHeight = programadorFontSize + buttonPaddingY * 2;
+          const buttonX = textX - buttonWidth / 2;
+          const buttonY = textY - buttonHeight / 2;
+
+          if (
+            event.clientX >= buttonX &&
+            event.clientX <= buttonX + buttonWidth &&
+            event.clientY >= buttonY &&
+            event.clientY <= buttonY + buttonHeight
+          ) {
             window.location.href = "pages/programador.html";
+          }
         }
-    }
 
-    // Clique no botão Certificados
-    if (certificadosVisible) {
-        const certificadosFontSize = (canvas.width * 0.03) * certificadosScale;
-        ctx.font = certificadosFontSize + "px monospace";
-        const textWidth = ctx.measureText(certificadosMessage).width;
-        const textX = canvas.width / 2;
-        const textY = canvas.height / 2 + certificadosYOffset;
-        
-        const buttonPaddingX = 20;
-        const buttonPaddingY = 10;
-        const buttonWidth = textWidth + buttonPaddingX * 2;
-        const buttonHeight = certificadosFontSize + buttonPaddingY * 2;
-        const buttonX = textX - buttonWidth / 2;
-        const buttonY = textY - buttonHeight / 2;
+        // Clique no botão Certificados
+        if (certificadosVisible) {
+          const certificadosFontSize = canvas.width * 0.03 * certificadosScale;
+          ctx.font = certificadosFontSize + "px monospace";
+          const textWidth = ctx.measureText(certificadosMessage).width;
+          const textX = canvas.width / 2;
+          const textY = canvas.height / 2 + certificadosYOffset;
 
-        if (event.clientX >= buttonX && event.clientX <= (buttonX + buttonWidth) &&
-            event.clientY >= buttonY && event.clientY <= (buttonY + buttonHeight)) {
+          const buttonPaddingX = 20;
+          const buttonPaddingY = 10;
+          const buttonWidth = textWidth + buttonPaddingX * 2;
+          const buttonHeight = certificadosFontSize + buttonPaddingY * 2;
+          const buttonX = textX - buttonWidth / 2;
+          const buttonY = textY - buttonHeight / 2;
+
+          if (
+            event.clientX >= buttonX &&
+            event.clientX <= buttonX + buttonWidth &&
+            event.clientY >= buttonY &&
+            event.clientY <= buttonY + buttonHeight
+          ) {
             window.location.href = "pages/certificate.html";
+          }
         }
-    }
-});
+      });
 
-canvas.addEventListener("mousemove", (event) => {
-    let overButton = false;
+      canvas.addEventListener("mousemove", (event) => {
+        let overButton = false;
 
-    if (programadorVisible) {
-        const programadorFontSize = (canvas.width * 0.03) * programadorScale;
-        ctx.font = programadorFontSize + "px monospace";
-        const textWidth = ctx.measureText(programadorMessage).width;
-        const textX = canvas.width / 2;
-        const textY = canvas.height / 2 + programadorYOffset;
-        
-        const buttonPaddingX = 20;
-        const buttonPaddingY = 10;
-        const buttonWidth = textWidth + buttonPaddingX * 2;
-        const buttonHeight = programadorFontSize + buttonPaddingY * 2;
-        const buttonX = textX - buttonWidth / 2;
-        const buttonY = textY - buttonHeight / 2;
+        if (programadorVisible) {
+          const programadorFontSize = canvas.width * 0.03 * programadorScale;
+          ctx.font = programadorFontSize + "px monospace";
+          const textWidth = ctx.measureText(programadorMessage).width;
+          const textX = canvas.width / 2;
+          const textY = canvas.height / 2 + programadorYOffset;
 
-        if (event.clientX >= buttonX && event.clientX <= (buttonX + buttonWidth) &&
-            event.clientY >= buttonY && event.clientY <= (buttonY + buttonHeight)) {
+          const buttonPaddingX = 20;
+          const buttonPaddingY = 10;
+          const buttonWidth = textWidth + buttonPaddingX * 2;
+          const buttonHeight = programadorFontSize + buttonPaddingY * 2;
+          const buttonX = textX - buttonWidth / 2;
+          const buttonY = textY - buttonHeight / 2;
+
+          if (
+            event.clientX >= buttonX &&
+            event.clientX <= buttonX + buttonWidth &&
+            event.clientY >= buttonY &&
+            event.clientY <= buttonY + buttonHeight
+          ) {
             overButton = true;
+          }
         }
-    }
 
-    if (certificadosVisible && !overButton) {
-        const certificadosFontSize = (canvas.width * 0.03) * certificadosScale;
-        ctx.font = certificadosFontSize + "px monospace";
-        const textWidth = ctx.measureText(certificadosMessage).width;
-        const textX = canvas.width / 2;
-        const textY = canvas.height / 2 + certificadosYOffset;
-        
-        const buttonPaddingX = 20;
-        const buttonPaddingY = 10;
-        const buttonWidth = textWidth + buttonPaddingX * 2;
-        const buttonHeight = certificadosFontSize + buttonPaddingY * 2;
-        const buttonX = textX - buttonWidth / 2;
-        const buttonY = textY - buttonHeight / 2;
+        if (certificadosVisible && !overButton) {
+          const certificadosFontSize = canvas.width * 0.03 * certificadosScale;
+          ctx.font = certificadosFontSize + "px monospace";
+          const textWidth = ctx.measureText(certificadosMessage).width;
+          const textX = canvas.width / 2;
+          const textY = canvas.height / 2 + certificadosYOffset;
 
-        if (event.clientX >= buttonX && event.clientX <= (buttonX + buttonWidth) &&
-            event.clientY >= buttonY && event.clientY <= (buttonY + buttonHeight)) {
+          const buttonPaddingX = 20;
+          const buttonPaddingY = 10;
+          const buttonWidth = textWidth + buttonPaddingX * 2;
+          const buttonHeight = certificadosFontSize + buttonPaddingY * 2;
+          const buttonX = textX - buttonWidth / 2;
+          const buttonY = textY - buttonHeight / 2;
+
+          if (
+            event.clientX >= buttonX &&
+            event.clientX <= buttonX + buttonWidth &&
+            event.clientY >= buttonY &&
+            event.clientY <= buttonY + buttonHeight
+          ) {
             overButton = true;
+          }
         }
-    }
 
-    canvas.style.cursor = overButton ? "pointer" : "default";
-});
+        canvas.style.cursor = overButton ? "pointer" : "default";
+      });
 
-loop();
-
-</script>
-
-</body>
+      loop();
+    </script>
+  </body>
 </html>
